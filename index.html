@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Jadwal Pelajaran XII-G</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#eeeeee;
+text-align:center;
+margin:0;
+font-weight:bold;
+}
+
+.header{
+background:#8B0000;
+color:white;
+padding:25px;
+font-size:38px;
+}
+
+#clock{
+font-size:24px;
+margin-top:10px;
+}
+
+.logo{
+margin-top:30px;
+width:140px;
+}
+
+button{
+cursor:pointer;
+font-weight:bold;
+border-radius:8px;
+}
+
+.btn{
+background:#a00000;
+color:white;
+border:3px solid #ffd400;
+outline:2px solid black;
+padding:14px 28px;
+font-size:18px;
+margin-top:20px;
+}
+
+.day-btn{
+background:#a00000;
+color:white;
+border:3px solid #ffd400;
+outline:2px solid black;
+padding:12px 22px;
+font-size:18px;
+margin:10px;
+}
+
+.day-container{
+margin-top:10px;
+}
+
+.schedule{
+margin-top:20px;
+display:none;
+}
+
+.row{
+display:flex;
+justify-content:center;
+margin:6px;
+}
+
+.time,.subject{
+background:#ffd400;
+border:2px solid black;
+padding:6px 10px;
+font-size:14px;
+}
+
+.time{
+width:120px;
+}
+
+.subject{
+width:200px;
+text-align:left;
+padding-left:10px;
+}
+
+.break{
+background:#dddddd;
+}
+
+.back{
+background:#aaa;
+color:black;
+padding:12px 24px;
+font-size:16px;
+border:none;
+margin-top:30px;
+}
+
+/* SWITCH */
+
+.music-control{
+position:absolute;
+right:20px;
+top:150px;
+}
+
+.switch{
+position:relative;
+display:inline-block;
+width:60px;
+height:34px;
+}
+
+.switch input{
+opacity:0;
+width:0;
+height:0;
+}
+
+.slider{
+position:absolute;
+cursor:pointer;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background-color:#ccc;
+transition:.4s;
+border-radius:34px;
+}
+
+.slider:before{
+position:absolute;
+content:"";
+height:26px;
+width:26px;
+left:4px;
+bottom:4px;
+background:white;
+transition:.4s;
+border-radius:50%;
+}
+
+input:checked + .slider{
+background-color:#a00000;
+}
+
+input:checked + .slider:before{
+transform:translateX(26px);
+}
+
+/* TOMBOL BULAT TAMBAHAN */
+
+.extra-button{
+position:absolute;
+right:28px;
+top:210px;
+
+width:25px;
+height:25px;
+
+background:#a00000;
+border:2px solid #ffd400;
+outline:1px solid black;
+
+border-radius:50%;
+
+cursor:pointer;
+transition:transform .1s;
+}
+
+.extra-button:active{
+transform:scale(0.88);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<audio id="music" loop>
+<source src="Different Heaven - Nekozilla  Electro  NCS - Copyright Free Music.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="s1" src="click sound.mp3"></audio>
+<audio id="s2" src="special-week-agemasen.mp3"></audio>
+<audio id="s3" src="fah sound.mp3"></audio>
+<audio id="s4" src="dry-fart.mp3"></audio>
+<audio id="s5" src="weiii-daitaku-helios.mp3"></audio>
+<audio id="s6" src="cihuyy-wielino-ino_kO92s4H.mp3"></audio>
+<audio id="s7" src="fart-with-reverb.mp3"></audio>
+<audio id="s8" src="Bungee Zombie Screaming.mp3"></audio>
+
+<!-- HOME -->
+<div id="home">
+
+<div class="header">
+Jadwal Pelajaran XII-G
+<div id="clock"></div>
+</div>
+
+<div class="music-control">
+
+<label class="switch">
+<input type="checkbox" id="musicSwitch">
+<span class="slider"></span>
+</label>
+
+</div>
+
+<button class="extra-button" onclick="extraButton()"></button>
+
+<img src="Logo_Smansa_15_.png" class="logo"><br>
+
+<button class="btn" onclick="lihatJadwal()">Lihat Jadwal</button>
+
+</div>
+
+
+<!-- HALAMAN JADWAL -->
+<div id="jadwalPage" style="display:none">
+
+<div class="header">
+Jadwal Pelajaran XII-G
+</div>
+
+<p>Pilih hari untuk melihat jadwal</p>
+
+<div class="day-container">
+
+<button class="day-btn" onclick="showDay('senin',2)">Senin</button>
+<button class="day-btn" onclick="showDay('selasa',3)">Selasa</button>
+<button class="day-btn" onclick="showDay('rabu',4)">Rabu</button>
+<button class="day-btn" onclick="showDay('kamis',5)">Kamis</button>
+<button class="day-btn" onclick="showDay('jumat',6)">Jumat</button>
+
+</div>
+
+<div id="scheduleContainer"></div>
+
+<button class="back" onclick="kembali()">Kembali</button>
+
+</div>
+
+<script>
+
+function playSound(n){
+document.getElementById("s"+n).currentTime=0;
+document.getElementById("s"+n).play();
+}
+
+function lihatJadwal(){
+playSound(1);
+document.getElementById("home").style.display="none";
+document.getElementById("jadwalPage").style.display="block";
+document.getElementById("scheduleContainer").innerHTML="";
+}
+
+function kembali(){
+playSound(7);
+document.getElementById("jadwalPage").style.display="none";
+document.getElementById("home").style.display="block";
+document.getElementById("scheduleContainer").innerHTML="";
+}
+
+const data={
+
+senin:[
+["07.15-08.00","Upacara"],
+["08.00-08.45","Bahasa Indonesia"],
+["08.45-09.30","Seni Budaya"],
+["09.30-10.15","Seni Budaya"],
+["10.15-10.30","Istirahat","break"],
+["10.30-11.15","PKN"],
+["11.15-12.00","PKN"],
+["12.00-12.45","Istirahat","break"],
+["12.45-13.30","Informatika"],
+["13.30-14.15","PJOK"],
+["14.15-15.00","PJOK"],
+["15.00-15.45","PJOK"]
+],
+
+selasa:[
+["07.15-08.00","Matematika Lanjut"],
+["08.00-08.45","Matematika Lanjut"],
+["08.45-09.30","Matematika Lanjut"],
+["09.30-10.15","Fisika"],
+["10.15-10.30","Istirahat","break"],
+["10.30-11.15","Agama"],
+["11.15-12.00","Agama"],
+["12.00-12.45","Istirahat","break"],
+["12.45-13.30","Agama"],
+["13.30-14.15","Kimia"],
+["14.15-15.00","Kimia"],
+["15.00-15.45","Kimia"]
+],
+
+rabu:[
+["07.15-08.00","PKWU"],
+["08.00-08.45","PKWU"],
+["08.45-09.30","Matematika Wajib"],
+["09.30-10.15","Matematika Wajib"],
+["10.15-10.30","Istirahat","break"],
+["10.30-11.15","Fisika"],
+["11.15-12.00","Fisika"],
+["12.00-12.45","Istirahat","break"],
+["12.45-13.30","Kimia"],
+["13.30-14.15","Kimia"],
+["14.15-15.00","Informatika"],
+["15.00-15.45","Informatika"]
+],
+
+kamis:[
+["07.15-08.00","Matematika Wajib"],
+["08.00-08.45","Matematika Wajib"],
+["08.45-09.30","Sejarah"],
+["09.30-10.15","Sejarah"],
+["10.15-10.30","Istirahat","break"],
+["10.30-11.15","Bahasa Inggris"],
+["11.15-12.00","Bahasa Inggris"],
+["12.00-12.45","Istirahat","break"],
+["12.45-13.30","Fisika"],
+["13.30-14.15","Fisika"],
+["14.15-15.00","Informatika"],
+["15.00-15.45","Informatika"]
+],
+
+jumat:[
+["07.15-07.55","Kegiatan Jumat"],
+["07.55-08.35","Bahasa Indonesia"],
+["08.35-09.15","Bahasa Indonesia"],
+["09.15-09.55","Bahasa Indonesia"],
+["09.55-10.10","Istirahat","break"],
+["10.10-10.50","Matematika Lanjut"],
+["10.50-11.30","Matematika Lanjut"]
+]
+
+};
+
+function showDay(day,sound){
+
+playSound(sound);
+
+let container=document.getElementById("scheduleContainer");
+container.innerHTML="";
+
+data[day].forEach(item=>{
+
+let row=document.createElement("div");
+row.className="row";
+
+let t=document.createElement("div");
+t.className="time";
+t.innerText=item[0];
+
+let s=document.createElement("div");
+s.className="subject";
+s.innerText=item[1];
+
+if(item[2]=="break"){
+t.classList.add("break");
+s.classList.add("break");
+}
+
+row.appendChild(t);
+row.appendChild(s);
+container.appendChild(row);
+
+});
+
+}
+
+setInterval(()=>{
+let now=new Date();
+document.getElementById("clock").innerText=now.toLocaleTimeString();
+},1000);
+
+let music=document.getElementById("music");
+let sw=document.getElementById("musicSwitch");
+
+sw.addEventListener("change",()=>{
+if(sw.checked){
+music.play();
+}else{
+music.pause();
+music.currentTime = 0;
+}
+});
+
+function extraButton(){
+
+let a=document.getElementById("s8");
+
+a.currentTime=0;
+a.play();
+
+}
+
+</script>
+
+</body>
+</html>
